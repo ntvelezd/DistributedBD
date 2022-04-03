@@ -2,20 +2,16 @@ import socket
 import selectors
 import types
 import requestParser
-import random
+import debug
 
 sel = selectors.DefaultSelector()
 
 HOST = "127.0.0.1"
 PORT = 3333
 
-def randomServer(servers):
-    serverNames = list(servers)
-    return random.choice(serverNames)
-
 def accept_wrapper(sock):
     conn, addr = sock.accept()  # Should be ready to read
-    print(f"Accepted connection from {addr}")
+    print(f"Conexion aceptada con {addr}")
     conn.setblocking(False)
     data = types.SimpleNamespace(addr=addr, inb=b"", outb=b"")
     events = selectors.EVENT_READ | selectors.EVENT_WRITE
@@ -29,7 +25,7 @@ def service_connection(key, mask):
         if recv_data:
             data.outb += recv_data
         else:
-            print(f"Closing connection to {data.addr}")
+            print(f"Cerrando conexion con {data.addr}")
             sel.unregister(sock)
             sock.close()
 
@@ -37,11 +33,14 @@ def service_connection(key, mask):
         if data.outb:
             jsonRequest = requestParser.parseRequest(data.outb)
             servers = requestParser.getServers(jsonRequest, "myconfig.ini")
-            print(servers)
-            #databaseServer = randomServer(servers)
-            print(f"Echoing {data.outb!r} to {data.addr}")
-            sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
+            response = requestParser.connectToServer(data.outb, servers)
+            
+            if response == b'':
+                response = b'{"estado" : 500, "mensaje" : "Error"}'
+                debug.printError("\nNo hay respuesta e los servidores, deberian estar caidos")
+    
+            sock.send(response)
+            data.outb = b''
 
 def main():
     lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -60,7 +59,7 @@ def main():
                 else:
                     service_connection(key, mask)
     except KeyboardInterrupt:
-        print("Caught keyboard interrupt, exiting")
+        print("Interrupcion por teclado encontrada, saliendo")
     finally:
         sel.close()
 
