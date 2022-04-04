@@ -1,18 +1,18 @@
-import yadb
+import database
 
 HOST = "127.0.0.1"
 
-myConnection = yadb.connect(HOST, 'Jovanni')
-myTable = myConnection.get("Vasquez")
+Connection = database.connect(HOST, 'Jovanni')
+Table = Connection.get("Vasquez")
 
 
-#myTable.put("Mango", ["lagartija", "iguana", "lagarto"])
-# myTable.put("Mango", "Toma")
-#myTable.delete("Mango")
-#lista = myTable.get("Mango")
-#print(lista)
-#myTable.update("Mango", "Toma")
+#Table.put("Mango", ["lagartija", "iguana", "lagarto"])
+#Table.put("Mango", "Toma")
+#Table.delete("Mango")
+#List = Table.get("Mango")
+#print(List)
+#Table.update("Mango", "Toma")
 
 
 
-myTable.close()
+Table.close()
