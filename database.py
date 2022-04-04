@@ -47,9 +47,9 @@ class Table(Connection):
         response = self.sock.recv(1024)
         strResponse = response.decode('utf-8').replace("'", '"')
         jsonResponse = json.loads(strResponse)
-        print("Received:", jsonResponse)
-        if jsonResponse["status"] == 200:
-            return jsonResponse["values"]
+        print("Recibido:", jsonResponse)
+        if jsonResponse["estado"] == 200:
+            return jsonResponse["valores"]
 
     def delete(self, key):
         request = {
