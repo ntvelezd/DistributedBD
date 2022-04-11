@@ -8,10 +8,10 @@ Table = Connection.get("Vasquez")
 
 #Table.put("Mango", ["lagartija", "iguana", "lagarto"])
 #Table.put("Mango", "Toma")
-Table.delete("Mango")
+#Table.delete("Mango")
 #List = Table.get("Mango")
 #print(List)
-#Table.update("Mango", "Toma")
+Table.update("Mango", "Toma")
 
 
 

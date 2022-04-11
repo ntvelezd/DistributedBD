@@ -163,8 +163,6 @@ def read(database, table, key):
 def files_for_values(key, values):
     if(type(values) == str):
         values = values.split(",")
-    print(values)
-    print(type(values))
     value_count = 0
     values_array = list()
     for value in values:
